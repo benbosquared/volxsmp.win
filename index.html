@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VolX SMP — Trust No One • Build • Dominate</title>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --fire1: #FCE700;
+      --fire2: #FF6A00;
+      --fire3: #FF2200;
+      --dark:  #080808;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --text:  #e8d5b0;
+      --muted: #7a6a55;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── EMBER CANVAS ── */
+    #embers {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(8,8,8,0.85);
+      border-bottom: 1px solid rgba(255,106,0,0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    nav .logo-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      background: linear-gradient(90deg, var(--fire1), var(--fire2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.05em;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover, nav a.active { color: var(--fire2); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 2rem 4rem;
+      text-align: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 60%, rgba(255,106,0,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 50% 80%, rgba(255,34,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      width: min(320px, 75vw);
+      height: auto;
+      filter: drop-shadow(0 0 40px rgba(255,106,0,0.5)) drop-shadow(0 0 80px rgba(255,34,0,0.3));
+      animation: floatLogo 4s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    .tagline {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(0.55rem, 1.5vw, 0.8rem);
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 3.5rem;
+    }
+
+    .tagline span { color: var(--fire2); }
+
+    /* ── CONNECT CARD ── */
+    .connect-card {
+      position: relative;
+      background: var(--dark2);
+      border: 1px solid rgba(255,106,0,0.25);
+      border-radius: 4px;
+      padding: 2.5rem 3rem;
+      width: min(560px, 90vw);
+      margin-bottom: 2rem;
+    }
+
+    .connect-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 10%; right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--fire2), var(--fire1), var(--fire2), transparent);
+    }
+
+    .connect-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,106,0,0.15);
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--fire2);
+      border-bottom-color: var(--fire2);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--fire3), var(--fire2));
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
+      color: #000;
+      margin-top: 2px;
+    }
+
+    .ip-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--dark3);
+      border: 1px solid rgba(255,106,0,0.2);
+      border-radius: 3px;
+      padding: 0.9rem 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .ip-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .ip-value {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      color: var(--fire1);
+      flex: 1;
+    }
+
+    .copy-btn {
+      background: linear-gradient(135deg, var(--fire3), var(--fire2));
+      border: none;
+      border-radius: 2px;
+      padding: 0.5rem 1rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: opacity 0.2s, transform 0.1s;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover { opacity: 0.85; }
+    .copy-btn:active { transform: scale(0.97); }
+    .copy-btn.copied { background: linear-gradient(135deg, #00c853, #00e676); }
+
+    /* ── FEATURES ── */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--fire2);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+      text-align: center;
+      color: var(--fire1);
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--dark2);
+      border: 1px solid rgba(255,106,0,0.15);
+      border-radius: 4px;
+      padding: 1.8rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255,106,0,0.5);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--fire2);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .feature-card p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,106,0,0.1);
+      padding: 2rem;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    footer a {
+      color: var(--fire2);
+      text-decoration: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      nav ul { gap: 1rem; }
+      .connect-card { padding: 1.8rem 1.5rem; }
+      .ip-value { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="embers"></canvas>
+
+<nav>
+  <span class="logo-text">VolX SMP</span>
+  <ul>
+    <li><a href="index.html" class="active">Join</a></li>
+    <li><a href="rules.html">Rules</a></li>
+    <li><a href="https://discord.gg/amKFn2SpvM" target="_blank">Discord</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <img src="logo.png" alt="VolX SMP" class="hero-logo"/>
+  <p class="tagline">Trust No One &nbsp;<span>•</span>&nbsp; Build &nbsp;<span>•</span>&nbsp; Dominate</p>
+
+  <div class="connect-card">
+    <div class="connect-tabs">
+      <button class="tab-btn active" onclick="switchTab('java', this)">Java Edition</button>
+      <button class="tab-btn" onclick="switchTab('bedrock', this)">Bedrock Edition</button>
+    </div>
+
+    <div id="java" class="tab-content active">
+      <div class="step"><span class="step-num">1</span><span>Open Minecraft and click <strong>Multiplayer</strong></span></div>
+      <div class="step"><span class="step-num">2</span><span>Click <strong>Add Server</strong></span></div>
+      <div class="step"><span class="step-num">3</span><span>Paste the server IP below and click <strong>Done</strong></span></div>
+      <div class="step"><span class="step-num">4</span><span>Select VolX SMP and click <strong>Join Server</strong></span></div>
+      <div class="ip-row">
+        <span class="ip-label">Server IP</span>
+        <span class="ip-value">volxsmp.win</span>
+        <button class="copy-btn" onclick="copyIP('volxsmp.win', this)">Copy</button>
+      </div>
+    </div>
+
+    <div id="bedrock" class="tab-content">
+      <div class="step"><span class="step-num">1</span><span>Open Minecraft and go to <strong>Play → Servers</strong></span></div>
+      <div class="step"><span class="step-num">2</span><span>Scroll down and tap <strong>Add Server</strong></span></div>
+      <div class="step"><span class="step-num">3</span><span>Enter the address and port below, then <strong>Save</strong></span></div>
+      <div class="step"><span class="step-num">4</span><span>Tap the server to <strong>Join</strong></span></div>
+      <div class="ip-row">
+        <span class="ip-label">Address</span>
+        <span class="ip-value">volxsmp.win</span>
+        <button class="copy-btn" onclick="copyIP('volxsmp.win', this)">Copy</button>
+      </div>
+      <div class="ip-row" style="margin-top:0.75rem">
+        <span class="ip-label">Port</span>
+        <span class="ip-value">19132</span>
+        <button class="copy-btn" onclick="copyIP('19132', this)">Copy</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <p class="section-label">What awaits you</p>
+  <h2 class="section-title">Survive. Conquer. Dominate.</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚔️</div>
+      <h3>Free For All PvP</h3>
+      <p>Trust no one. Every player is a potential threat. Fight your way to the top or fall trying.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏗️</div>
+      <h3>Build & Claim</h3>
+      <p>Carve out your territory, build your base, and defend it from raiders.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Level Up</h3>
+      <p>Grind skills and levels to unlock permanent boosts and rise through the ranks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💀</div>
+      <h3>High Stakes</h3>
+      <p>Every decision matters. Ally wisely, loot freely, and dominate the leaderboards.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 VolX SMP &nbsp;·&nbsp; <a href="rules.html">Rules</a> &nbsp;·&nbsp; <a href="https://discord.gg/amKFn2SpvM" target="_blank">Discord</a> &nbsp;·&nbsp; <a href="https://store.volxsmp.win" target="_blank">Store</a></p>
+</footer>
+
+<script>
+  // ── EMBER PARTICLES ──
+  const canvas = document.getElementById('embers');
+  const ctx = canvas.getContext('2d');
+  let W, H, embers = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function randomEmber() {
+    return {
+      x: Math.random() * W,
+      y: H + 10,
+      size: Math.random() * 2.5 + 0.5,
+      speedX: (Math.random() - 0.5) * 0.8,
+      speedY: -(Math.random() * 1.2 + 0.4),
+      life: 1,
+      decay: Math.random() * 0.004 + 0.002,
+      color: Math.random() > 0.5 ? '#FF6A00' : '#FCE700'
+    };
+  }
+
+  for (let i = 0; i < 60; i++) {
+    const e = randomEmber();
+    e.y = Math.random() * H;
+    e.life = Math.random();
+    embers.push(e);
+  }
+
+  function animateEmbers() {
+    ctx.clearRect(0, 0, W, H);
+    if (embers.length < 80 && Math.random() < 0.3) embers.push(randomEmber());
+
+    embers.forEach((e, i) => {
+      e.x += e.speedX;
+      e.y += e.speedY;
+      e.life -= e.decay;
+      if (e.life <= 0) { embers.splice(i, 1); return; }
+
+      ctx.save();
+      ctx.globalAlpha = e.life * 0.6;
+      ctx.fillStyle = e.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = e.color;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+    requestAnimationFrame(animateEmbers);
+  }
+  animateEmbers();
+
+  // ── TABS ──
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── COPY IP ──
+  function copyIP(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

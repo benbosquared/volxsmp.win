@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rules — VolX SMP</title>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --fire1: #FCE700;
+      --fire2: #FF6A00;
+      --fire3: #FF2200;
+      --dark:  #080808;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --text:  #e8d5b0;
+      --muted: #7a6a55;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #embers {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(8,8,8,0.85);
+      border-bottom: 1px solid rgba(255,106,0,0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    nav .logo-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      background: linear-gradient(90deg, var(--fire1), var(--fire2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+
+    nav a {
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: var(--fire2); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position: relative;
+      z-index: 1;
+      padding: 120px 2rem 3rem;
+      text-align: center;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(255,106,0,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .page-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--fire2);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1rem, 3vw, 1.8rem);
+      color: var(--fire1);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── RULES ── */
+    .rules-container {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    .rule-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .rule-section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255,106,0,0.15);
+    }
+
+    .rule-section-icon {
+      font-size: 1.4rem;
+    }
+
+    .rule-section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fire2);
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 1.2rem;
+      background: var(--dark2);
+      border: 1px solid rgba(255,106,0,0.08);
+      border-left: 3px solid var(--fire3);
+      border-radius: 0 3px 3px 0;
+      margin-bottom: 0.6rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .rule-item:hover {
+      border-left-color: var(--fire2);
+      background: #161616;
+    }
+
+    .rule-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.45rem;
+      color: var(--fire3);
+      flex-shrink: 0;
+      margin-top: 3px;
+      min-width: 20px;
+    }
+
+    .rule-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--fire1);
+    }
+
+    .rule-text .note {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── PUNISHMENT NOTICE ── */
+    .punishment-notice {
+      background: rgba(255,34,0,0.06);
+      border: 1px solid rgba(255,34,0,0.25);
+      border-radius: 4px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .punishment-notice p {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--fire3);
+      text-transform: uppercase;
+      line-height: 1.8;
+    }
+
+    .punishment-notice span {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* ── DISCORD CTA ── */
+    .discord-cta {
+      background: var(--dark2);
+      border: 1px solid rgba(255,106,0,0.2);
+      border-radius: 4px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .discord-cta::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 10%; right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--fire2), var(--fire1), var(--fire2), transparent);
+    }
+
+    .discord-cta h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--fire1);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .discord-cta p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, var(--fire3), var(--fire2));
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .cta-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,106,0,0.1);
+      padding: 2rem;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    footer a { color: var(--fire2); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      nav ul { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="embers"></canvas>
+
+<nav>
+  <span class="logo-text">VolX SMP</span>
+  <ul>
+    <li><a href="index.html">Join</a></li>
+    <li><a href="rules.html" class="active">Rules</a></li>
+    <li><a href="https://discord.gg/amKFn2SpvM" target="_blank">Discord</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <p class="page-label">The Law of the Land</p>
+  <h1 class="page-title">Server Rules</h1>
+  <p class="page-subtitle">Break these and face the consequences. No exceptions, no excuses.</p>
+</div>
+
+<div class="rules-container">
+
+  <div class="punishment-notice">
+    <p>Punishments range from <span>warnings and temporary mutes/bans</span> to <span>permanent bans</span> at staff discretion.<br/>
+    Ignorance of the rules is not an excuse.</p>
+  </div>
+
+  <div class="rule-section">
+    <div class="rule-section-header">
+      <span class="rule-section-icon">🗣️</span>
+      <span class="rule-section-title">General Conduct</span>
+    </div>
+    <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Respect all players.</strong> Harassment, bullying, and targeted hate will not be tolerated.
+      <span class="note">Trash talk is fine — personal attacks are not.</span></span></div>
+    <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>No discrimination.</strong> Slurs or hate speech based on race, gender, religion, sexuality, or nationality will result in an immediate ban.</span></div>
+    <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>No spam or excessive caps</strong> in chat. Keep it readable.</span></div>
+    <div class="rule-item"><span class="rule-num">04</span><span class="rule-text"><strong>No advertising</strong> other servers or discords in chat.</span></div>
+    <div class="rule-item"><span class="rule-num">05</span><span class="rule-text"><strong>English only</strong> in global chat. Use DMs for other languages.</span></div>
+  </div>
+
+  <div class="rule-section">
+    <div class="rule-section-header">
+      <span class="rule-section-icon">⚙️</span>
+      <span class="rule-section-title">Gameplay Rules</span>
+    </div>
+    <div class="rule-item"><span class="rule-num">06</span><span class="rule-text"><strong>No hacking or cheating.</strong> This includes X-ray, kill aura, fly hacks, or any unfair advantage.
+      <span class="note">Banned clients = permanent ban, no appeal.</span></span></div>
+    <div class="rule-item"><span class="rule-num">07</span><span class="rule-text"><strong>No exploiting bugs or glitches.</strong> Report them to staff — do not abuse them.
+      <span class="note">Duping, item glitches, and map exploits are all included.</span></span></div>
+    <div class="rule-item"><span class="rule-num">08</span><span class="rule-text"><strong>No AFK machines or auto-clickers</strong> to farm resources unattended.</span></div>
+    <div class="rule-item"><span class="rule-num">09</span><span class="rule-text"><strong>No griefing spawn or protected areas.</strong> Player bases in the wild are fair game.</span></div>
+    <div class="rule-item"><span class="rule-num">10</span><span class="rule-text"><strong>No lag machines.</strong> Builds intentionally designed to lag the server will be removed and the player banned.</span></div>
+  </div>
+
+  <div class="rule-section">
+    <div class="rule-section-header">
+      <span class="rule-section-icon">🏦</span>
+      <span class="rule-section-title">Economy & Trading</span>
+    </div>
+    <div class="rule-item"><span class="rule-num">11</span><span class="rule-text"><strong>No scamming in trades.</strong> Agree on terms before trading — staff will not refund items from deals gone wrong without evidence.</span></div>
+    <div class="rule-item"><span class="rule-num">12</span><span class="rule-text"><strong>No real-money trades (RMT)</strong> for in-game items outside of the official store.</span></div>
+  </div>
+
+  <div class="rule-section">
+    <div class="rule-section-header">
+      <span class="rule-section-icon">👮</span>
+      <span class="rule-section-title">Staff & Appeals</span>
+    </div>
+    <div class="rule-item"><span class="rule-num">13</span><span class="rule-text"><strong>Respect staff decisions.</strong> If you disagree, appeal in Discord — don't argue in-game.</span></div>
+    <div class="rule-item"><span class="rule-num">14</span><span class="rule-text"><strong>No impersonating staff</strong> or claiming fake authority over other players.</span></div>
+    <div class="rule-item"><span class="rule-num">15</span><span class="rule-text"><strong>Ban appeals must be submitted in Discord.</strong> In-game begging will not be considered.</span></div>
+  </div>
+
+  <div class="discord-cta">
+    <h3>Questions or Appeals?</h3>
+    <p>Join our Discord to reach staff, submit ban appeals, or report players.</p>
+    <a href="https://discord.gg/amKFn2SpvM" target="_blank" class="cta-btn">Join the Discord</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2025 VolX SMP &nbsp;·&nbsp; <a href="index.html">Join</a> &nbsp;·&nbsp; <a href="rules.html">Rules</a> &nbsp;·&nbsp; <a href="https://store.volxsmp.win" target="_blank">Store</a></p>
+</footer>
+
+<script>
+  const canvas = document.getElementById('embers');
+  const ctx = canvas.getContext('2d');
+  let W, H, embers = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function randomEmber() {
+    return {
+      x: Math.random() * W, y: H + 10,
+      size: Math.random() * 2 + 0.5,
+      speedX: (Math.random() - 0.5) * 0.8,
+      speedY: -(Math.random() * 1.2 + 0.4),
+      life: 1, decay: Math.random() * 0.004 + 0.002,
+      color: Math.random() > 0.5 ? '#FF6A00' : '#FCE700'
+    };
+  }
+
+  for (let i = 0; i < 50; i++) { const e = randomEmber(); e.y = Math.random() * H; e.life = Math.random(); embers.push(e); }
+
+  function animateEmbers() {
+    ctx.clearRect(0, 0, W, H);
+    if (embers.length < 70 && Math.random() < 0.3) embers.push(randomEmber());
+    embers.forEach((e, i) => {
+      e.x += e.speedX; e.y += e.speedY; e.life -= e.decay;
+      if (e.life <= 0) { embers.splice(i, 1); return; }
+      ctx.save();
+      ctx.globalAlpha = e.life * 0.5;
+      ctx.fillStyle = e.color;
+      ctx.shadowBlur = 6; ctx.shadowColor = e.color;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    });
+    requestAnimationFrame(animateEmbers);
+  }
+  animateEmbers();
+</script>
+</body>
+</html>
